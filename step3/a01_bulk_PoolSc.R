@@ -93,8 +93,8 @@ cor1=cor(cpmBulk2$bulkP1, cpmScPool2$Pooled); print(cor1) #0.957
 library(ggplot2)
 g=ggplot(NULL, aes(cpmBulk2$bulkP1, cpmScPool2$Pooled ) )+theme_classic()+
   geom_point(size=0.02, alpha=0.1)+
-  geom_text(aes(x=0,y=14,label=paste0("Rp=", round(cor1[1],3) ) ),hjust=0 )+  
-  labs(x="log2(CPM+1)\n(MDA-MB-468 bulk1)", y="log2(CPM+1)\n(MDA-MB-468 sc Pooled)",
+  geom_text(aes(x=0,y=14,label=paste0("r=", round(cor1[1],3) ) ),hjust=0 )+  
+  labs(x="Tag of bulk data (log2)", y="Tag of pooled single cells (log2)",
        title="Gene expresion in log2(cpm+1)")
 g
 
@@ -106,7 +106,7 @@ g2=ggplot(NULL, aes(cpmBulk2$bulkP1, cpmBulk2$bulkP2 ) )+theme_classic()+
 g2
 
 
-CairoPDF('bulk_PoolSC.cor-2-new.pdf', width=3.5,height=3.5)
+CairoPDF('bulk_PoolSC.cor-2-new.pdf', width=3.3,height=3.3)
 print(g)
 print(g2)
 dev.off()

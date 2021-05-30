@@ -11,6 +11,10 @@ gene="NPM1P39"
 gene="UBFD1"
 #
 #
+
+
+
+
 tmp=DPAU[gene,!is.na(DPAU[gene,])];tmp
 #
 tmp[,intersect(names(tmp), cid.normal)]

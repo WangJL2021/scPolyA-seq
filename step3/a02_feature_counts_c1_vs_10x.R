@@ -38,18 +38,31 @@ countsPerCell=apply(rnaM, 2, sum)
 genePerCell=apply(rnaM>0, 2, sum)
 
 
+mean(countsPerCell) #[1] 15268.85 counts per cell
+
 library(ggplot2)
-ggplot(data.frame(value=countsPerCell), aes(x=1, y=value/1e6))+geom_boxplot()+
+p01=ggplot(data.frame(value=countsPerCell), aes(x=1, y=value/1e6))+geom_boxplot()+
   geom_jitter(alpha=0.3)+
   labs(x="293T cells(by 10x)", y='Million counts per cell')+
   theme_classic()
+p01
 #
 
-ggplot(data.frame(value=genePerCell), aes(x=1, y=value))+geom_boxplot()+
+p02=ggplot(data.frame(value=genePerCell), aes(x=1, y=value))+geom_boxplot()+
   geom_jitter(alpha=0.3)+
   labs(x="293T cells(by 10x)", y='Gene number per cell')+
   theme_classic()
+p01
+pdf('10x_readPerCell_GenePerCell.pdf',width=3, height=4)
+print(p01)
+print(p02)
+dev.off()
 #
+
+
+
+
+
 
 ## 
 # read RNA matrix of C1
@@ -63,6 +76,24 @@ genePerCell2=apply(rnaMc1>0, 2, sum)
 #
 hist(countsPerCell2, n=100)
 hist(genePerCell2, n=100)
+
+#
+mean(countsPerCell2) #[1] 1465466 counts per cell
+
+
+
+#########
+# compare counts
+mean(countsPerCell2)/mean(countsPerCell) #95.97752
+compare_countsPerCell=t.test(countsPerCell, countsPerCell2)
+compare_countsPerCell
+compare_countsPerCell$p.value #1.689043e-77
+# compare gene
+mean(genePerCell2)/mean(genePerCell) #1.86842
+compare_genePerCell=t.test(genePerCell2, genePerCell)
+compare_genePerCell
+compare_genePerCell$p.value # 4.333437e-92
+
 
 
 ####################

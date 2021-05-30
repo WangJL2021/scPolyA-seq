@@ -30,34 +30,34 @@ aa[which(aa$read_number>1e7),]
 
 
 library("Cairo")
-CairoPDF(file='/data/jinwf/wangjl/apa/190515/whatIs_EmptyWell.pdf',width=6,height=6)
+CairoPDF(file='/data/jinwf/wangjl/apa/190515/whatIs_EmptyWell-2.pdf',width=3.5,height=3.5)
 par(mar=c(4.5, 4, 0.5, 1.5))
 par(mfrow=c(2,1))
 #fig1 
-hist(aa$read_number,n=492,xlab="Read Counts per Cell",ylab="Freq",main="",
-     xlim=c(0,2e7))
+hist(aa$read_number/1e6,n=492,xlab="Million Read Counts per Cell",ylab="Freq",main="",
+     xlim=c(0,2e7/1e6))
 #draw lines
-abline(v=10**5.5,col='blue',lty=2)
-abline(v=5.5e6,col='red',lty=2)
+abline(v=10**5.5/1e6,col='blue',lty=2)
+#abline(v=5.5e6,col='red',lty=2)
 #text
-text(-4e5,20,"white",cex=0.8)
-text(2.5e6,20,"single",cex=1,col="blue")
-text(1e7,20,"dual?",cex=1.2,col="#D42331")
+#text(-4e5,20,"white",cex=0.8)
+#text(2.5e6,20,"single",cex=1,col="blue")
+#text(1e7,20,"dual?",cex=1.2,col="#D42331")
 #
-text(5.4e6,25,"x=5.5e6",cex=0.7,col="red",pos=4)
+#text(5.4e6,25,"x=5.5e6",cex=0.7,col="red",pos=4)
 #end
 
 #fig2 draw again in log scale 
 hist(log10(aa$read_number),n=500, xlab="log10[Read Counts per Cell]",ylab="Freq",main="")
 #
 abline(v=5.5,col='blue',lty=2)
-abline(v=log10(5.5e6),col='red',lty=2)
+#abline(v=log10(5.5e6),col='red',lty=2)
 #
-text(5,7,"white",cex=0.8)
-text(6,7,"single",cex=1,col="blue")
-text(7.1,7,"dual?",cex=1.2,col="#D42331")
+#text(5,7,"white",cex=0.8)
+#text(6,7,"single",cex=1,col="blue")
+#text(7.1,7,"dual?",cex=1.2,col="#D42331")
 #
-text(5.47,4,"x=1e5.5",cex=0.7,col="blue",pos=4)
+text(5.47,6, expression( "x=5.5" ),cex=0.7,col="blue",pos=4)
 #end2
 dev.off()
 
