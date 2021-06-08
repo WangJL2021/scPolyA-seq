@@ -67,7 +67,7 @@ gene.highRNA=(function(){
   
   dt1[which(dt1$mean>=0.5),]
 })()
-dim(gene.highRNA) # 7819    3
+dim(gene.highRNA) # 10038     3
 head(gene.highRNA)
 #       gene       cv2     mean
 #AAAS   AAAS 2.2037756 1.673852
@@ -112,9 +112,9 @@ dev.off()
 
 # check: how many high expression gene?
 rs1=intersect(rownames(gene.highRNA), rownames(DEG_mRNA))
-length(rs1) #7819
+length(rs1) #10038
 dim(DEG_mRNA) #15991     6
-dim(gene.highRNA) #7819    3
+dim(gene.highRNA) #10038    3
 
 
 
@@ -152,12 +152,12 @@ dev.off()
 
 # check: how many high expression gene?
 rs2=intersect(rownames(gene.highRNA), rownames(gDPAU))
-length(rs2) #3766
+length(rs2) #3847
 dim(DEG_mRNA) #15991     6
 dim(gDPAU) #3940   16
 
 
-rs3=intersect(rs1, rs2); length(rs3) #3766
+rs3=intersect(rs1, rs2); length(rs3) #3847
 length(rs1)  #10038
 
 
@@ -176,7 +176,7 @@ newDt=data.frame(
   sigAPA=dif2[rs3, 'thresh']
 )
 row.names(newDt)=newDt$gene
-dim(newDt) #3766    5
+dim(newDt) #3847    5
 head(newDt)
 #             gene      rnaFC       apaFC  apaDelta sigRNA sigAPA
 #AARS         AARS  1.9638733 -0.24566915 -6.595807     up     ns
@@ -219,7 +219,10 @@ table( newDt$sigRNA2 )
 #down   ns   up 
 #148 3566  133 
 table(newDt$sigRNA2, newDt$sigAPA)
-
+#     down   ns   up
+#down    7  135    6
+#ns    186 3188  192
+#up      6  121    6
 
 write.table(newDt, '04_foldChangePlot_APA_RNA.df.txt')
 
@@ -270,27 +273,33 @@ dev.off()
 #
 
 
+
+
 # plot again, only threshold no P cutoff.
 newDt2=newDt
 head(newDt2)
-newDt2$RNAthresh="no"
+newDt2$RNAthresh="ns"
 newDt2[which(newDt2$rnaFC>log2(2) & abs(newDt2$apaDelta)>30 ),"RNAthresh"]='up'
 newDt2[which(newDt2$rnaFC< (-log2(2)) & abs(newDt2$apaDelta)>30 ),"RNAthresh"]='down'
+table(newDt2$RNAthresh)
+#down   ns   up 
+#119 3647   81
+
 #
 #df_text=newDt2[which(newDt2$RNAthresh!="ns"),] # by threshold
 #df_text=newDt2[which(newDt2$sigAPA!="ns" & newDt2$sigAPA!="n.s."),] #by P and threshold
 df_text=newDt2[which(newDt2$sigAPA!="ns" & newDt2$RNAthresh!="ns"),] # by RNA threshold
 
-dim(df_text) #200 9
+dim(df_text) #184 9
 # df_text=df_text[order(-abs(df_text$apaDelta) ),] #order
 df_text=df_text[order(-abs(df_text$rnaFC) ),] #order
 
 #
-g=ggplot(newDt2, aes(apaDelta, rnaFC, color=factor(RNAthresh, levels = c("up",'no','down')) ) )+
+g=ggplot(newDt2, aes(apaDelta, rnaFC, color=factor(RNAthresh, levels = c("up",'ns','down')) ) )+
   geom_point(alpha=0.5,size=1)+
   scale_color_manual("", values = c('red','grey','blue'),
                      labels=c('Up', 'n.s.','Down') )+
-  theme_bw()+ylim(-15, 10)+
+  theme_bw()+ylim(-7.5, 7.5)+
   #xlim(-5,5)+
   geom_hline(yintercept = c(-1,1), linetype=2, color='#555555')+
   geom_vline(xintercept = c(-30,30), linetype=2, color='#555555')+
@@ -300,19 +309,105 @@ g=ggplot(newDt2, aes(apaDelta, rnaFC, color=factor(RNAthresh, levels = c("up",'n
        title="Sync vs normal HeLa"); g
 #
 g2=g+geom_text_repel(data=df_text[1:15,], aes(x=apaDelta, y=rnaFC, label=gene), alpha=1,
-                     colour="black",size=2.5)
+                     colour="black",size=2.5); g2
 pdf('04_foldChangePlot_APA_RNA-3.pdf', width=4,height=3.5)
 g2
 dev.off()
 #
-length( rownames( newDt2[which(newDt2$rnaFC>1 & newDt2$apaDelta>30),]) ) #33
-length( rownames( newDt2[which(newDt2$rnaFC>1 & newDt2$apaDelta<(-30) ),]) ) #48
-length( rownames( newDt2[which(newDt2$rnaFC <(-1) & newDt2$apaDelta>30),]) ) #62
-length( rownames( newDt2[which(newDt2$rnaFC<(-1) & newDt2$apaDelta<(-30) ),]) ) #57
-
+n=30
+length( rownames( newDt2[which(newDt2$rnaFC>1 & newDt2$apaDelta>n),]) ) #33
+length( rownames( newDt2[which(newDt2$rnaFC>1 & newDt2$apaDelta<(-n) ),]) ) #48
+length( rownames( newDt2[which(newDt2$rnaFC <(-1) & newDt2$apaDelta>n),]) ) #62
+length( rownames( newDt2[which(newDt2$rnaFC<(-1) & newDt2$apaDelta<(-n) ),]) ) #57
 #
 
 
+#############
+ct=c(33, 62, 48, 57)
+#
+dt2=data.frame(
+  length=c("lengthen","lengthen", '', "shorten","shorten"),
+  exp=c('up','down', '', 'up','down'),
+  #value=c(54,84,NA,85,83)
+  value=c(ct[1:2],NA, ct[3:4])
+)
+dt2
+#ggplot(dt2, aes(length, value, color=exp))+geom_histogram()
+
+#
+pdf("04_foldChangePlot_APA_RNA-3_barPlot.pdf", width=2.8, height=3.8)
+par(mgp=c(1.4,0.5,0) )
+posX=barplot( rev(dt2$value), col=rev(c("red",'blue','white',"red",'blue')),
+              ylim=c(0,70), border=NA, ylab="Gene number" )
+text(x=posX, y=rev(dt2$value)+4, labels=rev(dt2$value) )
+#text(x=posX-0.3, y=-6, offset = 1,
+#     srt = 30, xpd = TRUE, cex=0.9,
+#     labels=rev(dt2$exp) )
+# arrows
+arrows(3.5,-5,6,-5, length = 0.08,
+       col='black', xpd = T, code=2, lwd=2)
+text(x=5, y=-12,  xpd = TRUE, cex=0.9,
+     labels="Lengthen" )
+#
+arrows(0,-5,2.5,-5, length = 0.08,
+       col='black', xpd = T, code=1, lwd=2)
+text(x=1, y=-12,  xpd = TRUE, cex=0.9,
+     labels="Shorten" )
+#
+legend(-2.5,-15,xpd = TRUE, horiz=T,
+       #box.lwd=3,
+       text.width=2.5, 
+       x.intersp=0.5,
+       border=NA, cex=0.8,
+       #title="RNA", title.adj=1,
+       fill=c('white','blue',"red"), legend = c('RNA level','down', 'up'), bty='n' )
+dev.off()
+#
+
+
+
+
+
+
+
+ct=c(33, 62, 48, 57)
+#
+dt2=data.frame(
+  length=c("shorten","lengthen", '', "shorten","lengthen"),
+  exp=c('down','down', '', 'up','up'),
+  #value=c(54,84,NA,85,83)
+  value=c(ct[c(4,2)],NA, ct[c(3,1)])
+)
+dt2
+
+pdf("04_foldChangePlot_APA_RNA-3_barPlot-2.pdf", width=2.8, height=3.8)
+par(mgp=c(1.4,0.5,0) )
+posX=barplot( dt2$value, col=c("blue",'blue','white',"red",'red'),
+              ylim=c(0,70), border=NA, ylab="Gene number" )
+text(x=posX, y=(dt2$value)+4, labels=dt2$value )
+text(x=posX,y=-1, labels=dt2$length, xpd=T, srt=60, adj=1)
+#
+xy=par('usr')
+legend(-2.5, xy[4]+15,xpd = TRUE, horiz=T,
+       #box.lwd=3,
+       text.width=2.5, 
+       x.intersp=0.5,
+       border=NA, cex=0.8,
+       #title="RNA", title.adj=1,
+       fill=c('white','blue',"red"), legend = c('RNA level','down', 'up'), bty='n' )
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+#################
 # left: shorten
 barDf=data.frame(
   x=c('up','down'),
@@ -382,6 +477,14 @@ print(p1,vp=vp)
 vp2 <- viewport(width = 0.2, height = 0.4, x = 0.6,y = 0.5,just=c("left","top"))
 print(p2,vp=vp2)
 #
+
+
+
+
+
+
+
+
 
 
 
@@ -483,7 +586,7 @@ ct=(function(t1=log2(2)){
   set4=newDt[which(newDt$rnaFC<=-t1 & newDt$sigAPA=="down"),];dim(set4) #48 5
   
   # switch
-  if(1==1){
+  if(1==10){
     # write genes
     writeLines( rownames(set1), "04_set1.gene.txt")
     writeLines( rownames(set2), "04_set2.gene.txt")

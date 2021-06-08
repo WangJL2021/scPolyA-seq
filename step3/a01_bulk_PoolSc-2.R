@@ -28,6 +28,16 @@ head(sc0[,1:4])
 dim(sc0) #18679   225
 
 
+## save bulk matrix
+bulk_matrix=data.frame(
+  gene=rownames(bulk1),
+  bulk1=bulk1$bulkP1,
+  bulk2=bulk2$bulkP2,
+  row.names = 1
+)
+dim(bulk_matrix)
+head(bulk_matrix)
+write.table(bulk_matrix, "bulk_matrix.df.txt")
 
 
 #########################

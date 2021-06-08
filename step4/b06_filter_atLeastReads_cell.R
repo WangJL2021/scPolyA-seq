@@ -31,7 +31,7 @@ apaMatrix2[1:4,1:6]
 
 
 ############################
-# QC-0: by counts per cell 
+# QC-0: by counts per site
 counts_per_site=apply(apaMatrix2,1,sum)
 length(counts_per_site) #458419
 head(counts_per_site)
@@ -46,7 +46,7 @@ dev.off()
 #
 
 ############################
-#QC-0: by cell nubmer
+#QC-1: by cell nubmer per site
 expressed_cell_number=apply(apaMatrix2>0, 1 ,sum)
 length(expressed_cell_number) #285291
 head(expressed_cell_number)
@@ -55,15 +55,17 @@ min(expressed_cell_number)
 #
 CairoPDF(file="01_expressed_cell_number.pdf", width=5,height=4)
 hist( log2(expressed_cell_number), n=50,
-      xlab="log2(expressed cell number)", ylab="polyA site number", main='Total polyA site: 285,291' )
+      xlab="log2(Cell number per polyA site)", ylab="Freq", 
+      main='Total polyA site: 285,291', ylim=c(0, 10000) )
+abline(v=log2(15), lty=2, col='red') #2**4=16
 
 
 
 
-# Cell number distribution aftetr filtering by counts.
+# Cell number distribution after filtering by counts/site.
 table(counts_per_site>15)
 # FALSE   TRUE 
-# 240282 218137
+# 258033 200386 
 dim(apaMatrix2)
 apaMatrix2[1:4,1:5]
 apaMatrix3=apaMatrix2[counts_per_site>15,]
@@ -80,6 +82,7 @@ dev.off()
 #
 length(cellNumbers) #200386
 length(cellNumbers[which(cellNumbers>log2(225*0.1))]) #20222 少了一个数量级
+
 
 ############################
 # QC-1: filter begin

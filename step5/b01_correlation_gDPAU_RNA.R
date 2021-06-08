@@ -24,7 +24,7 @@ cid.HeLa=rownames(cellInfo[which( substr(cellInfo$cellType,1,2)=='He'),]); lengt
 #
 #(2) add RNA read counts for each genes
 rnaM=read.csv('/data/jinwf/wangjl/apa/20200701Fig/f2/BC_HeLa/BC_HeLa.222cells.count.V4.csv', row.names = 1)
-dim(rnaM) #18662 225
+dim(rnaM) #18662 222
 rnaM[1:10,1:10]
 #
 rnaM.logcpm=as.data.frame(apply(rnaM, 2, function(x){
@@ -139,7 +139,7 @@ save_plot_cor2=function(df_cor, keyword="BC", output='cor_BC/'){
   print(paste('Saved: ', output, keyword))
 }
 
-save_plot_cor2(df_cor.BC, 'MBA-MD-468', 'cor_BC/')
+save_plot_cor2(df_cor.BC, 'MDA-MB-468', 'cor_BC/')
 
 df_cor.BC['PPP1CA',]
 df_cor.BC['UNC50',]
@@ -246,7 +246,7 @@ head(gene.set2, n=15)
 ###################
 # process3: apa RNA point plot
 ###################
-CairoPDF(file="cor_BC/BC03_point_apa_RNA-.pdf", width=3, height=3)
+CairoPDF(file="cor_BC/BC03_point_apa_RNA-2.pdf", width=3, height=3)
 # pos
 plot_apa_RNA_by_gene('NUTF2', cid.BC)
 plot_apa_RNA_by_gene('CD59', cid.BC, x=70, y=6)

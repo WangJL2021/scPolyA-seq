@@ -455,8 +455,8 @@ df1=(function(){
   #get
   print(tmp_df[1:5,])
   
-  CairoPDF(file="11-UMAPPlot-syncHeLaTag.pdf",width=4,height=2.8)
-  #CairoPDF(file="11-tSNEPlot-syncHeLaTag.pdf",width=4,height=2.8)
+  #CairoPDF(file="11-UMAPPlot-syncHeLaTag.pdf",width=4,height=2.8)
+  CairoPDF(file="11-tSNEPlot-syncHeLaTag.pdf",width=4,height=2.8)
   g=ggplot(tmp_df, aes(UMAP_1, UMAP_2, color=factor(type) ))+
   #g=ggplot(tmp_df, aes(tSNE_1, tSNE_2, color=factor(type) ))+
     geom_point(size=0.2)+
@@ -478,22 +478,32 @@ df1=(function(){
 })()
 dim(df1);head(df1)
 
+
+
+write.table(df1, '11-UMAPPlot-syncHeLaTag_TextOnPic.df.txt')
 # tag on figure
-CairoPDF(file="11-UMAPPlot-syncHeLaTag_TextOnPic.pdf",width=3,height=3)
+df1$type2=as.character(df1$type2)
+df1[which( substring(df1$type2,1,2)=="BC" ),]$type2="MDA-MB-468"
+df1$type2=factor(df1$type2, levels=c("MDA-MB-468", "HeLa_normal", "HeLa_sync" ))
+levels(df1$type2)
+#
+CairoPDF(file="11-UMAPPlot-syncHeLaTag_TextOnPic-2.pdf",width=3,height=3)
 g3=ggplot(df1, aes(UMAP_1, UMAP_2, color=type2 ))+
   #g2=ggplot(tmp_df, aes(tSNE_1, tSNE_2, color=type2 ))+
   geom_point(size=0.5)+
   guides(color=guide_legend(title=NULL)) +
-  annotate("text", x=1.9, y=1, label='BC_0', size=4, color="#FF9ECE")+
-  annotate("text", x=-5.8, y=-0.8, label='BC_1', size=4, color="#F81082")+
+  annotate("text", x=-2, y=-1, label='MDA-MB-468', size=4, color="#F81082")+
+  #annotate("text", x=1.9, y=1, label='BC_0', size=4, color="#FF9ECE")+
+  #annotate("text", x=-5.8, y=-0.8, label='BC_1', size=4, color="#F81082")+
   #
   annotate("text", x=4.8, y=-4.9, label='HeLa_normal', size=4, color="#005FFF")+
   annotate("text", x=4.5, y=-3, label='HeLa_sync', size=4, color="#98BEFD")+
   theme_classic()+
-  scale_color_manual('Cell type',values=c("#FF9ECE","#F81082", '#005FFF', '#98BEFD'))+
+  # scale_color_manual('Cell type',values=c("#FF9ECE", "#F81082", '#005FFF', '#98BEFD'))+
+  scale_color_manual('Cell type',values=c( "#F81082", '#005FFF', '#98BEFD'))+
   theme(
     legend.position = "none"
-  );
+  )
 print(g3)
 dev.off()
 

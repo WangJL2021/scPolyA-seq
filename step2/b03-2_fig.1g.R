@@ -4,6 +4,14 @@
 setwd("/home/wangjl/data/apa/20200701Fig/f2/BC_HeLa2/")
 getwd()
 
+pd=function(...){
+  print(dim(...))
+}
+ph=function(...){
+  print(head(...))
+}
+
+
 # load data
 library(Seurat)
 pbmc12=readRDS("../BC_HeLa/BC_HeLa.222cells_umap_tSNE-pbmc12.1_forUMAP_diy_addCellType.rds")
@@ -25,12 +33,17 @@ head(cellInfo)
   )
   rownames(annotation_col) = colnames(dt)
   annotation_col=annotation_col[order(annotation_col$cellType),]
+  # there are no sig difference between breast cancer cell line.
+  annotation_col[grep("BC_", annotation_col$cellType),]$cellType="MDA-MB-468"
+  #
   #
   cellInfo=cellInfo[rownames(annotation_col),]
+  
   annotation_col2=data.frame(
     #cellType2=cellInfo$cellType2,
-    cellType=annotation_col$cellType
+    cellType=factor(annotation_col$cellType, levels=c("MDA-MB-468", "HeLa_normal", "HeLa_sync"))
   )
+  table(annotation_col2$cellType)
   rownames(annotation_col2) = rownames(annotation_col)
   
   genelist.hm=c(
@@ -55,17 +68,17 @@ head(cellInfo)
     #"PRSS21", "FSTL3", 
     
     #BC1
-    "EXPH5", "LYPD6B",
-    "ZNF551", 
-    "SLFN11", 
-    "LEAP2", 
-    "FBXO33", #"IMPAD1", 
+    #"EXPH5", "LYPD6B",
+    #"ZNF551", 
+    #"SLFN11", 
+    #"LEAP2", 
+    #"FBXO33", #"IMPAD1", 
     #'ZNF781','APOBEC3F','ZNF800',
     # BC1
     #"WDFY3",
-    "KAT6A",
-    "SECISBP2L",
-    "ANKFY1",
+    #"KAT6A",
+    #"SECISBP2L",
+    #"ANKFY1",
     #"ZNF800",
     #"PHLDB2",
     
@@ -90,20 +103,21 @@ head(cellInfo)
   )
   genelist.hm=unique(genelist.hm)
   
-  dt=dt[genelist.hm, rownames(annotation_col)]
-  writeLines(rownames(dt), 'tmp.txt')
-  write.table(dt, '14-heatmap_all4cluster.drawHM.data.txt')
+  dt=dt[genelist.hm, rownames(annotation_col2)]
+  writeLines(rownames(dt), 'tmp-2.txt')
+  write.table(dt, '14-heatmap_all4cluster.drawHM.data-2.txt')
   #
   # define colors
   ann_colors = list(
-    cellType = c('BC_0'="#FF9ECE", 'BC_1'="#F81082", 'HeLa_normal'="#005FFF", 'HeLa_sync'="#98BEFD") #D1E2FF
+    #cellType = c('BC_0'="#FF9ECE", 'BC_1'="#F81082", 'HeLa_normal'="#005FFF", 'HeLa_sync'="#98BEFD") #D1E2FF
+    cellType = c( 'MDA-MB-468'="#F81082", 'HeLa_normal'="#005FFF", 'HeLa_sync'="#98BEFD")
     #cellType2 = c('BC_0'="#FF9ECE", 'BC_1'="#F81082", 'HeLa_normal'="#005FFF", 'HeLa_sync'="#98BEFD", 'HeLa_syncMix'='#D1E2FF') #
   )
   #head(ann_colors)
   #gap
-  gaps=cumsum(as.numeric( table(annotation_col2$cellType) ) )
+  gaps=cumsum( as.numeric( table(annotation_col2$cellType)) )
   bk <- seq(-1.5,1.5,0.001) #c(seq(-3,-0.1,by=0.01),seq(0,3,by=0.01))
-  CairoPDF(file="14-heatmap_all4cluster-data-remake-small.pdf",width=8, height=3.5)
+  CairoPDF(file="14-heatmap_all4cluster-data-remake-small-2.pdf",width=8, height=3.5)
   par(mar= c(5, 5, 4, 2) + 0.1 )
   pheatmap(t(dt), scale='column', 
            clustering_method = 'ward.D2',

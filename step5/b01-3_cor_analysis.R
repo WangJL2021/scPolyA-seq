@@ -3,7 +3,7 @@ setwd("/data/jinwf/wangjl/apa/20200701Fig/f6/result/cor_BC/")
 getwd()
 
 # load data
-cor_df=read.table("MBA-MD-468_01-volcano_Spearman_cor_gDPAU_RNA.df.txt")
+cor_df=read.table("MDA-MB-468_01-volcano_Spearman_cor_gDPAU_RNA.df.txt")
 cor_df=cor_df[order(-cor_df$cor),]
 head(cor_df)
 table(cor_df$sig)
@@ -24,7 +24,7 @@ table(cor_df$sig, cor_df$cor>0)
 ############
 # all n.s. genes
 gene.ns=rownames(cor_df[which(cor_df$sig=="n.s."),])
-writeLines( gene.ns, "MBA-MD-468_02-Spearman_cor_gDPAU_RNA.No-Correlation.gene.txt")
+writeLines( gene.ns, "MDA-MB-468_02-Spearman_cor_gDPAU_RNA.No-Correlation.gene.txt")
 
 # plus
 writeLines( rownames(cor_df[which(cor_df$sig=="n.s." & cor_df$cor>0),]), "no-cor-plus.gene.txt")

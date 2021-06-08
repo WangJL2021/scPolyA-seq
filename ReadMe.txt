@@ -1,1 +1,1 @@
-Code for scPolyA-seq
+Code for scPolyA-seq paper

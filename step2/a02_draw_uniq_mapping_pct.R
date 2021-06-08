@@ -67,6 +67,63 @@ dev.off()
 
 
 
+# test 0.8, 0.9
+df__=df
+df__$source="mixed"
+df__[which(df__$hg19p>0.9),]$source="hg19"
+df__[which(df__$mm10p>0.9),]$source="mm10"
+table(df__$source)
+# hg19 mixed  mm10 
+# 13    35   352
+
+df$source="mixed"
+df[which(df$hg19p>0.8),]$source="hg19"
+df[which(df$mm10p>0.8),]$source="mm10"
+table(df$source)
+#hg19 mixed  mm10 
+#13    20   367 
+table(df__$source, df$source)
+#      hg19 mixed mm10
+#hg19    13     0    0
+#mixed    0    20   15
+#mm10     0     0  352
+# use 0.8 later.
+
+# remove empty well, on the left side.
+cid=readLines("01NO_empty.Left.cellID")
+df2=df[which(df$cid %in% cid),]
+tb=table(df2$source);tb
+g=ggplot(df2, aes(mm10/1e6,hg19/1e6))+geom_point(alpha=0.4)+
+  labs(title="Unique mapping counts")+
+  labs(x="Million counts on mm10", y="Million counts on hg19")+
+  theme_bw();g
+
+g1=ggplot(df2, aes(mm10/1e6,hg19/1e6,color=source))+geom_point(alpha=0.4)+
+  labs(title="Unique mapping counts")+
+  labs(x="Million counts on mm10", y="Million counts on hg19")+
+  theme_bw()+
+  scale_color_discrete(name  ="",breaks=c("hg19", "mixed", "mm10"),
+                       labels=c("hg19(13)", "mixed(15)", "mm10(335)"));g1
+
+## save
+write.csv(df, 'hg19_mm10_plot/uniqCounts_hg19_mm10-plot-df.csv')
+write.csv(df2, 'hg19_mm10_plot/uniqCounts_hg19_mm10-plot-df2.csv')
+
+CairoPDF(file="hg19_mm10_plot/uniqCounts_hg19_mm10-plot-v1.pdf",width=2.4,height=2.5)
+print(g)
+dev.off()
+
+CairoPDF(file="hg19_mm10_plot/uniqCounts_hg19_mm10-plot-v2.pdf",width=3.5,height=2.5)
+print(g1)
+print(g1+xlim(0,12)+ylim(0, 12))
+dev.off()
+
+
+
+
+
+
+
 
 # melt to one column
 library(reshape2)
