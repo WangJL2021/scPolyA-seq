@@ -1,0 +1,29 @@
+configfile: "config.yaml"
+SI=config["Samples"]
+RawPath=config["RawPath"]
+
+
+rule all:
+	input:
+		#expand("QC_raw/{sample}.keep_fastqc.html", sample=SI),
+		"QC_raw/multiqc/multiqc_report.html",
+		#expand("map/{sample}_Aligned.sortedByCoord.out.bam", sample=SI)
+		expand("mapQ255/{sample}.bam.bai", sample=SI),
+		"QC_map/multiqc_report.html",
+		"merge/merged.sort.bed",
+		"merge_pA/raw.pas.bed",
+		"merge_pA/pasPostions_siteAndIncludes_PY.json",
+		expand("bed/{sample}.freq", sample=SI),
+		"bed/apa_matrix.df.txt",	
+
+#include:"rules/00_copy.sf"
+include:"rules/00_gunzip.sf"
+include:"rules/01_get_polyA_reads.sf"
+include: "rules/02_QC_raw.sf"
+include: "rules/03_map_with_STAR.sf"
+include: "rules/04_bam2bed.sf"
+include: "rules/05_merge_pA.sf"
+include: "rules/06_get_APA_matrix.sf"
+
+
+

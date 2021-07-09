@@ -9,10 +9,13 @@
 
 .ipynb_checkpoints
 __pycache__
+*.swp
 
 backup
 dustbin
 test
+
+
 data
 data/trim_galore/
 

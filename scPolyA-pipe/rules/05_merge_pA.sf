@@ -1,0 +1,15 @@
+# get the 3'end as polyA site
+rule get_polyA_site_raw:
+	input:"merge/merged.sort.bed"
+	output:"merge_pA/raw.pas.bed"
+	script:"../scripts/get_polyA_site_raw.py"
+
+# recode, create APA index file
+# merge APA sites within 24nt, get feature row name.
+# if cluster longer than 24nt, then keep 12nt before and after, others recluster.
+rule merge_pA:
+	input: "merge_pA/raw.pas.bed"
+	output: "merge_pA/pasPostions_siteAndIncludes_PY.json", "merge_pA/pasPostions_siteAndIncludes_PY.bed"
+	log: "merge_pA/pasPostions_siteAndIncludes_PY.json.log"
+	script: "../scripts/a05_merge_pA_by_distance.py"
+

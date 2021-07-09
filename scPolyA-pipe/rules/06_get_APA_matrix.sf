@@ -1,0 +1,30 @@
+# using small bed file to get APA matrix.
+rule bam2bed_eachCell:
+	input:"mapQ255/{sample}.bam", "mapQ255/{sample}.bam.bai"
+	output: "bed/{sample}.bed"
+	shell: "bedtools bamtobed -i {input[0]} > {output}"
+
+rule addFreq_to_pas:
+	input:"bed/{sample}.bed", "merge_pA/pasPostions_siteAndIncludes_PY.json"
+	output: "bed/{sample}.freq"
+	script: "../scripts/a06_addFreq_to_pas.py"
+
+
+rule getId_list:
+	output: temp("id_list.txt")
+	run: 
+		fw=open(output[0], 'w')
+		for i in SI:
+			fw.write(i+"\n")
+		fw.close()
+
+root=config["Snk_RootDir"]
+rule get_apa_Matrix:
+	input: 
+		id="id_list.txt", 
+		files=expand("bed/{sample}.freq", sample=SI)
+	output: "bed/apa_matrix.df.txt"
+	params: dir="bed/"
+	log: "bed/apa_matrix.df.txt.log"
+	shell: "bash {root}/scripts/a06_get_apa_matrix.sh {input.id} {output} {params.dir} >{log} 2>&1"
+

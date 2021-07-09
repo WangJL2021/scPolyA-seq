@@ -31,21 +31,22 @@ head(cellInfo)
 #########
 table(cellInfo$cellCycle)
 #
+cellInfo[which(substr(cellInfo$cellType,1,2)=="BC"),]$cellType="MDA-MB-468"
 tbl1=table(cellInfo$cellType, cellInfo$cellCycle)
 tbl1
 #            G1S G2M  M MG1  S
-#BC_0         29  20 13  20 10
-#BC_1         18   9 12  19 15
 #HeLa_normal  10   3  3  11  3
 #HeLa_sync     3   6  7   0 11
+#MDA-MB-468   47  29 25  39 25
+
 tbl1=tbl1[ ,c('G1S','S', 'G2M', 'M', 'MG1')]
-tbl1=tbl1[,c(5,4,3,2,1)] #reorder columns
+tbl1=tbl1[c(3,1,2),c(5,4,3,2,1)] #reorder columns
 tbl1
 
 #####
 # test
-p1=chisq.test(tbl1[1:2,]); p1 #0.2227
-p2=chisq.test(tbl1[3:4,]); p2 #p-value = 0.0002153=2.15e-4
+p1=chisq.test(tbl1[1:2,]); p1 #p-value = 0.4465
+p2=chisq.test(tbl1[2:3,]); p2 #p-value = 0.0002153=2.15e-4
 
 p2=formatC(p2$p.value, format = "e", digits = 2)
 p2
@@ -66,9 +67,9 @@ barplot(1:5,col=col)
 library(Cairo)
 
 
-CairoPDF(file='01_cellCycle_barplot.pct-withP.pdf', width=3, height=4)
+CairoPDF(file='01_cellCycle_barplot.pct-withP.pdf', width=2.8, height=4)
 par(mar=c(5, 4, 5, 5) + 0.1)
-posX=barplot(as.matrix(tbl2), col=col,
+posX=barplot(as.matrix(tbl2), col=col, mgp=c(2.5,1,0),
              names.arg=NULL,
              space=0.2, # bar space
              ylab="Percentage",
@@ -84,10 +85,10 @@ legend(usr[2], usr[4]*0.9, border=NA,
 text(posX, usr[3]*5.5, labels=cellNames, adj=1, srt=45, xpd=TRUE)
 # p value
 segments(posX[1], usr[4]*1.03, posX[2], xpd=T, lwd=2)
-segments(posX[3], usr[4]*1.03, posX[4], xpd=T, lwd=2)
+segments(posX[2], usr[4]*1.1, posX[3], xpd=T, lwd=2)
 #
 text( mean(posX[1:2]), usr[4]*1.08, labels="n.s.", xpd=T, cex=1.3)
-text( mean(posX[3:4]), usr[4]*1.08, labels=paste0("***"), xpd=T, cex=1.3)
+text( mean(posX[2:3]), usr[4]*1.16, labels=paste0("***"), xpd=T, cex=1.3)
 #box()
 dev.off()
 

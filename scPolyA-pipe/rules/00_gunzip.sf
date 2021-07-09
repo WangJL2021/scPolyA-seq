@@ -1,0 +1,4 @@
+rule gunzip:
+        input: RawPath + "/{sample}.fastq.gz"
+        output: "fq/{sample}.fq"
+        shell: "gunzip -c {input} > {output}"

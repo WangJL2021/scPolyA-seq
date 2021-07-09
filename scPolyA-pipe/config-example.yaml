@@ -1,0 +1,7 @@
+Snk_RootDir: /home/wangjl/data/scPolyA-seq/scPolyA-pipe
+star_index: /home/wangjl/data/ref/hg19/index/star/
+
+RawPath: /home/wangjl/data/apa/test/raw
+Samples:
+ - c19ROW01
+ - c19ROW03

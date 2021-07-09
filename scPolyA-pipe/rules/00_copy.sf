@@ -1,0 +1,4 @@
+rule copy:
+        input: RawPath + "/{sample}.fastq.gz"
+        output: "copy/{sample}.fastq.gz"
+        shell: "cp {input} {output}"

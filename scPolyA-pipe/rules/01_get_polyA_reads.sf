@@ -1,0 +1,7 @@
+# keep 10A or 6A$, and len>10 reads;
+rule get_polyA_reads:
+	input: "fq/{sample}.fq"
+	output: 
+		"PolyAReads/{sample}.keep.fq", 
+		"PolyAReads/{sample}.other.fq"
+	script: "../scripts/get_polyA_reads.py"

@@ -1,0 +1,43 @@
+# mapping to human genome, keep MAPQ=255
+rule mapping:
+	input: "PolyAReads/{sample}.keep.fq"
+	output: "map/{sample}_Aligned.sortedByCoord.out.bam"
+	threads: 10
+	params: index=config["star_index"], out="map/{sample}_"
+	log: "map/{sample}.star.log"
+	shell: "STAR --runThreadN {threads}  \
+		--outSAMtype BAM SortedByCoordinate  \
+		--genomeDir {params.index}  \
+		--readFilesIn {input}  \
+		--outFileNamePrefix  {params.out} >{log} 2>&1"
+
+rule keep_MAPQ255:
+	input: "map/{sample}_Aligned.sortedByCoord.out.bam"
+	output: "mapQ255/{sample}.bam"
+	threads: 5
+	log: "mapQ255/{sample}.log"
+	shell:"samtools view -@ {threads} -hb -q 255 {input} >{output} 2>{log}"
+
+
+rule index:
+	input: "{sample}.bam"
+	output: "{sample}.bam.bai"
+	threads: 5
+	shell:"samtools index -@ {threads} {input}"
+
+
+rule QC_map:
+	input: "mapQ255/{sample}.bam"
+	output: "QC_map/{sample}_fastqc.html"
+	params: out="QC_map/"
+	threads: 10
+	shell: "fastqc -t {threads} -o {params.out} -f bam {input}"
+
+rule multiQC:
+	input: expand("QC_map/{sample}_fastqc.html", sample=SI)
+	output: "QC_map/multiqc_report.html"
+	params: out="QC_map/"
+	log:"QC_map/multiqc_report.log"
+	shell: "multiqc {params.out}/*fastqc.zip -o {params.out} >{log} 2>&1"
+
+

@@ -299,7 +299,7 @@ dev.off()
 
 
 ######### tSNE, and UMAP
-pbmc9 <- FindNeighbors(pbmc8, k.param=20, dims = 1:8)
+pbmc9 <- FindNeighbors(pbmc8, k.param=45, dims = 1:8) #old version: 20
 pbmc10 <- FindClusters(pbmc9, resolution = 0.6,algorithm=1) #resolution between 0.4-1.2 
 
 head(Idents(pbmc10), 15) #cluster and cid
@@ -316,12 +316,12 @@ DimPlot(pbmc11, reduction = "umap")
 DimPlot(pbmc11, reduction = "tsne")
 dev.off()
 
+
+
 #save to file
 saveRDS(pbmc11, file = "BC_HeLa.225cells_umap_tSNE-pbmc11_version5.rds")
-
+#pbmc11=readRDS("BC_HeLa.222cells_umap_tSNE-pbmc12_forUMAP_diy.rds")
 table(pbmc11@active.ident)
-#0  1  2 
-#93 75 57
 #
 
 

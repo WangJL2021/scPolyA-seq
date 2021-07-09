@@ -1,0 +1,18 @@
+rule QC_raw_fq:
+	input: "PolyAReads/{sample}.keep.fq"
+	output: 
+		"QC_raw/{sample}.keep_fastqc.html",
+	params:out_dir="QC_raw"
+	threads: 2
+	log: "QC_raw/{sample}_fastqc.html.log"
+	shell: 
+		"fastqc -t {threads} {input} -o {params.out_dir} >{log} 2>&1"
+
+rule multi_QC_raw:
+	input: expand("QC_raw/{sample}.keep_fastqc.html", sample=SI)
+	output:"QC_raw/multiqc/multiqc_report.html"
+	params: 
+		in_dir="QC_raw",
+		out_dir="QC_raw/multiqc/"
+	log: "QC_raw/multiqc/multiqc_report.html.log"
+	shell:"multiqc {params.in_dir}/*fastqc.zip -o {params.out_dir} >{log} 2>&1"

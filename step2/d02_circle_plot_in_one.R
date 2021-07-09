@@ -47,12 +47,14 @@ cellInfo=read.table("/data/jinwf/wangjl/apa/20200701Fig/f3/cell_cycle/cellInfo.V
 head(cellInfo)
 cellInfo=cellInfo[rownames(norPhaseScore),]
 norPhaseScore$cellType2=cellInfo$cellType
+norPhaseScore[which(substr(norPhaseScore$cellType2,1,2)=="BC"),]$cellType2="MDA-MB-468"
+table(norPhaseScore$cellType2)
 #
 norPhaseScore$phase=factor(norPhaseScore$phase, levels=c('G1S','S', 'G2M', 'M', 'MG1'))
 #
 main=paste0("Cell cycle score", "(", nrow(norPhaseScore) ," cells)")
 g2=ggplot(norPhaseScore, aes( G1S+S, G2M+M, color=phase, shape=cellType2 ))+
-  geom_point(size=1.8) + 
+  geom_point(size=1.5) + 
   theme_classic()+
   scale_shape_discrete("Cell cluster")+
   scale_color_manual("Phase", values=c(
@@ -60,6 +62,6 @@ g2=ggplot(norPhaseScore, aes( G1S+S, G2M+M, color=phase, shape=cellType2 ))+
   ))+
   guides(colour = guide_legend(override.aes = list(alpha = 1,size=2)));g2 # best
 
-pdf(paste0("03_cycleScore_cyclePlot_AllCells-large.pdf"), width=3.8, height=3.4)
+pdf(paste0("03_cycleScore_cyclePlot_AllCells-large.pdf"), width=3.8, height=3.2)
 print(g2)
 dev.off()
