@@ -27,10 +27,16 @@ Version: v2.25.0
 
 
 
-## 2. Goto your working directory, put your fastq file(for C1, your cellId_R2.fastq.gz) in raw/
+## 2. Goto your working directory, put your fastq file
+
 ```
-c01ROW07.fastq.gz
-c01ROW12.fastq.gz
+for C1, put your cellId_R2.fastq.gz in raw/
+raw/c01ROW07.fastq.gz
+raw/c01ROW12.fastq.gz
+
+or fastq file in fq/
+fq/c01ROW07.fq
+fq/c01ROW12.fq
 ```
 
 

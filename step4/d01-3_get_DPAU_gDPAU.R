@@ -144,6 +144,8 @@ DPAU[1:5,1:10]
 #AARS            0 100.000000       NA       NA       NA       80      100      100       NA        NA
 # save to file
 write.table(DPAU, '0_DPAU_2082x222.df.txt')
+DPAU=DPAU/100
+
 
 
 library(vioplot)
@@ -487,6 +489,9 @@ head(geneAPAInfo2)
 #save to file
 write.table(geneAPAInfo2, '3_gene_DPAUcellNumber_meanDPAU_sdDPAU_cpm_log2cpm.df.txt')
 
+# change ratio from [0, 100] to [0, 1]
+geneAPAInfo2$meanDPAU=geneAPAInfo2$meanDPAU/100
+geneAPAInfo2$sdDPAU=geneAPAInfo2$sdDPAU/100
 
 (function(){
   rsDF=geneAPAInfo2
@@ -495,10 +500,9 @@ write.table(geneAPAInfo2, '3_gene_DPAUcellNumber_meanDPAU_sdDPAU_cpm_log2cpm.df.
   g1=ggplot(rsDF, aes(meanDPAU, sdDPAU, color=DPAUcellNumber))+
     geom_point(size=0.4) + 
     scale_colour_gradientn('Cell number', colours=c('blue', 'white', 'red') )+
-    labs(x="Mean of gene' DPAU", y="Standard deviation of gene' DPAU")+
+    labs(x="Average of gene' DPAU", y="Standard deviation of gene' DPAU")+
     theme_bw()
   print(g1)
-  ##小结: 
   #
   g2=ggplot(rsDF, aes(log2cpm, sdDPAU, color=DPAUcellNumber))+
     geom_point(size=0.4) + 
@@ -519,9 +523,10 @@ write.table(geneAPAInfo2, '3_gene_DPAUcellNumber_meanDPAU_sdDPAU_cpm_log2cpm.df.
   g4=ggplot(rsDF, aes(meanDPAU,log2cpm, color=DPAUcellNumber))+
     geom_point(size=0.4) + 
     scale_colour_gradientn('Cell number', colours=c('blue', 'white', 'red') )+
-    labs(x="Mean of gene' DPAU",y="RNA expression level [log2(cpm+1)]")+
+    labs(x="Average of gene' DPAU",y="RNA expression level [log2(cpm+1)]")+
     theme_bw()
   print(g4)
+  
   
   # hist plot of a gene's DPAU
   plotDPAU_hist_byGene=function(gene, n=0){
@@ -532,7 +537,7 @@ write.table(geneAPAInfo2, '3_gene_DPAUcellNumber_meanDPAU_sdDPAU_cpm_log2cpm.df.
   }
   
   ## gene's mean DPAU around 50
-  print( rsDF[which(rsDF$mean>49.8 & rsDF$mean<50),] )
+  print( rsDF[which(rsDF$mean>49.8/100 & rsDF$mean<50/100),] )
   plotDPAU_hist_byGene('FANCA', 50)
   plotDPAU_hist_byGene('NUDT15', 30)
   #hist( as.numeric(DPAU['NCAPD3', !is.na(DPAU['NCAPD3',])]), n=20 )
@@ -543,9 +548,11 @@ write.table(geneAPAInfo2, '3_gene_DPAUcellNumber_meanDPAU_sdDPAU_cpm_log2cpm.df.
   plotDPAU_hist_byGene('PHPT1', 30)
   #
   ## gene's mean DPAU around 100
-  print( rsDF[which(rsDF$mean>99.9 & rsDF$mean<100),] )
+  print( rsDF[which(rsDF$mean>99.5/100 & rsDF$mean<100/100),] )
   plotDPAU_hist_byGene('UBC', 30)
   plotDPAU_hist_byGene('RPL7', 30)
+  plotDPAU_hist_byGene('DAD1', 30)
+  plotDPAU_hist_byGene('ATP6V1F', 30)
   #
   dev.off()
 })()

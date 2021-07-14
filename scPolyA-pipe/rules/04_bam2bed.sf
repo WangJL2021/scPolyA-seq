@@ -4,7 +4,7 @@ rule merge_bam:
 	threads:10
 	shell:"samtools merge -@ {threads} {output} {input}"
 
-rule sort_index:
+rule sort:
 	input:"merge/merged.bam"
 	output:"merge/merged.sort.bam"
 	threads: 10

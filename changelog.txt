@@ -3,5 +3,5 @@ v0.2 raw version 1
 v0.2 add fig.s1c
 v0.3 big font, 3 cluster,MDA-MB-468
 v0.4 seurat 2 cluster more reasonable; add scPolyA-pipe snakemake version1
-
+v0.5 steps rm no use; scPolyA-pipe update: set fq/ as temp(); fastqc add log;
 

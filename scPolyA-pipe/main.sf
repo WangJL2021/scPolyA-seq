@@ -9,7 +9,7 @@ rule all:
 		"QC_raw/multiqc/multiqc_report.html",
 		#expand("map/{sample}_Aligned.sortedByCoord.out.bam", sample=SI)
 		expand("mapQ255/{sample}.bam.bai", sample=SI),
-		"QC_map/multiqc_report.html",
+		"QC_map/multiqc/multiqc_report.html",
 		"merge/merged.sort.bed",
 		"merge_pA/raw.pas.bed",
 		"merge_pA/pasPostions_siteAndIncludes_PY.json",

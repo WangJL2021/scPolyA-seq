@@ -49,6 +49,9 @@ table(meanExp$group)
 # save
 write.table(meanExp, "meanExp_sigCor_neg_vs_pos_BC.df.txt")
 
+
+
+
 #############
 # plot
 # transfer p value for ggplot2 plotting
@@ -67,15 +70,27 @@ transPvalue2=function(p0){
   return(label)
 }
 
-p1=t.test(meanExp[pos,]$meanLogExp, meanExp[neg,]$meanLogExp)
+p1=t.test(meanExp[which(meanExp$group=="pos"),]$meanLogExp, 
+          meanExp[which(meanExp$group=="neg"),]$meanLogExp)
 p1$p.value
 
 
-pdf("expLevel_sigCor_genes.pdf", width=4, height=4)
-boxplot(meanExp$meanLogExp ~ meanExp$group, main="MDA-MB-468 cell line",
-        xlab="", ylab="Average expression(log2)")
-text(1.5, 12, labels = parse(text=transPvalue2(p1$p.value)) )
+
+pdf("expLevel_sigCor_genes.pdf", width=2.4, height=3.8)
+boxplot(meanExp$meanLogExp ~ meanExp$group,
+        xaxt='n', ylim=c(0,14.5), las=2, 
+        cex=0.5, cex.main=0.7,
+        col=c('blue', 'red'),
+        xlab="", ylab="Average expression(log2)",
+        main="MDA-MB-468 cell line\nGroup by APA and RNA correlation")
+text(1.5, 14, labels = parse(text=transPvalue2(p1$p.value)), cex=0.8 )
+
+text(x=c(1, 2), y=-1, labels=c("Negative", "Positive"),
+     cex=1, xpd=TRUE, adj=1, srt=60)
 dev.off()
+# end 
+
+
 
 
 table(meanExp$group)

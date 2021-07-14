@@ -31,13 +31,14 @@ rule QC_map:
 	output: "QC_map/{sample}_fastqc.html"
 	params: out="QC_map/"
 	threads: 10
-	shell: "fastqc -t {threads} -o {params.out} -f bam {input}"
+	log: "QC_map/{sample}_fastqc.html.log"
+	shell: "fastqc -t {threads} -o {params.out} -f bam {input} >{log} 2>&1"
 
-rule multiQC:
+rule multiQC_map:
 	input: expand("QC_map/{sample}_fastqc.html", sample=SI)
-	output: "QC_map/multiqc_report.html"
-	params: out="QC_map/"
-	log:"QC_map/multiqc_report.log"
-	shell: "multiqc {params.out}/*fastqc.zip -o {params.out} >{log} 2>&1"
+	output: "QC_map/multiqc/multiqc_report.html"
+	params: zip="QC_map", out="QC_map/multiqc"
+	log:"QC_map/multiqc/multiqc_report.log"
+	shell: "multiqc {params.zip}/*fastqc.zip -o {params.out} >{log} 2>&1"
 
 

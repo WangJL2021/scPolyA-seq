@@ -1,6 +1,7 @@
 # map to hg19 / mm10, uniq counts plot
 
 setwd("/home/wangjl/data/apa/190515")
+getwd()
 #source("https://bioc.ism.ac.jp/biocLite.R")
 #biocLite("ggplot2")
 library("ggplot2")
@@ -40,30 +41,34 @@ head(df)
 
 ###########################
 # draw scatter plot
-boxplot(df$hg19,df$mm10) #not ok
-hist(df$hg19/df$mm10, n=400) #not ok
+#boxplot(df$hg19,df$mm10) #not ok
+#hist(df$hg19/df$mm10, n=400) #not ok
+write.table(df, "pic00_uniqCounts_hg19_mm10-plot.df.txt")
 
-CairoPDF(file="pic00_uniqCounts_hg19_mm10-plot.pdf",width=5,height=5)
-#normal scale
-ggplot(df, aes(mm10,hg19))+geom_point(alpha=0.2)+
-  #xlim(0,15e6)+ylim(0, 3e6)+
+CairoPDF(file="pic00_uniqCounts_hg19_mm10-plot.pdf",width=3,height=3)
+# normal scale
+ggplot(df, aes(mm10/1e6,hg19/1e6))+geom_point(alpha=0.2)+
+  theme_bw()+
   labs(title="Unique mapping counts[rm empty]")
   #,x="Counts on mouse genome",y="Counts on human genome"
 
 #log scale
-ggplot(df, aes(log10(mm10),log10(hg19) ))+geom_point(alpha=0.2)+
-  #xlim(3.5,7)+ylim(3.5,7)+
-  labs(title="Unique mapping counts(log scale)[rm empty]",x="log10[mm10 counts]",y="log10[hg19 Counts]")
-
+ggplot(df, aes(log10(mm10/1e6),log10(hg19/1e6) ))+geom_point(alpha=0.2)+
+  theme_bw()+
+  labs(title="Unique mapping counts(log scale)[rm empty]",
+       x="log10[mm10 counts]",y="log10[hg19 Counts]")
 
 #pct relative(not much info)
 ggplot(df, aes(mm10/(mm10+hg19)*100,hg19/(mm10+hg19)*100))+
   geom_point(color="red",alpha=0.2)+
   geom_rug()+
   xlim(0,100)+ylim(0,100)+
+  theme_bw()+
   labs(title="Unique mapped counts ratio[rm empty]",x="mm10",y="hg19")
-#
 dev.off()
+
+
+
 
 
 
@@ -93,6 +98,8 @@ table(df__$source, df$source)
 cid=readLines("01NO_empty.Left.cellID")
 df2=df[which(df$cid %in% cid),]
 tb=table(df2$source);tb
+#hg19 mixed  mm10 
+#13    15   335 
 g=ggplot(df2, aes(mm10/1e6,hg19/1e6))+geom_point(alpha=0.4)+
   labs(title="Unique mapping counts")+
   labs(x="Million counts on mm10", y="Million counts on hg19")+
@@ -106,7 +113,7 @@ g1=ggplot(df2, aes(mm10/1e6,hg19/1e6,color=source))+geom_point(alpha=0.4)+
                        labels=c("hg19(13)", "mixed(15)", "mm10(335)"));g1
 
 ## save
-write.csv(df, 'hg19_mm10_plot/uniqCounts_hg19_mm10-plot-df.csv')
+write.csv(df,  'hg19_mm10_plot/uniqCounts_hg19_mm10-plot-df.csv')
 write.csv(df2, 'hg19_mm10_plot/uniqCounts_hg19_mm10-plot-df2.csv')
 
 CairoPDF(file="hg19_mm10_plot/uniqCounts_hg19_mm10-plot-v1.pdf",width=2.4,height=2.5)
@@ -117,6 +124,8 @@ CairoPDF(file="hg19_mm10_plot/uniqCounts_hg19_mm10-plot-v2.pdf",width=3.5,height
 print(g1)
 print(g1+xlim(0,12)+ylim(0, 12))
 dev.off()
+
+
 
 
 
@@ -170,7 +179,7 @@ ggplot(d1, aes(x=reorder(cid,counts, function(x){x[2]}), y=counts/1e6,fill=Genom
 ggplot(d2, aes(x=reorder(cid,pct, function(x){x[2]}), y=pct*100,fill=Genome))+
   geom_bar(stat="identity", position="fill")+
   labs(title="",x="Cell ID",y="Uniq mapped counts ratio")+
-  scale_x_discrete(limits=tmp$cid, labels=NULL) #不显示x轴刻度 name=NULL,
+  scale_x_discrete(limits=tmp$cid, labels=NULL)
 dev.off()
 
 
