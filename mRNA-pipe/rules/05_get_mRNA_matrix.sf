@@ -1,0 +1,19 @@
+rule getId_list:
+	output: temp("id_list.txt")
+	run: 
+		fw=open(output[0], 'w')
+		for i in SI:
+			fw.write(i+"\n")
+		fw.close()
+
+root=config["Snk_RootDir"]
+rule get_Matrix:
+	input: 
+		id="id_list.txt", 
+		files=expand("htseq/{sample}.bam.count", sample=SI)
+	output: "htseq/mRNA_matrix.df.txt"
+	params: dir="htseq/"
+	log: "htseq/mRNA_matrix.df.txt.log"
+	shell: "bash {root}/scripts/a05_get_mRNA_matrix.sh {input.id} {output} {params.dir} >{log} 2>&1"
+
+

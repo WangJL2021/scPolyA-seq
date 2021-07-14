@@ -1,0 +1,9 @@
+Snk_RootDir: /home/wangjl/data/scPolyA-seq/mRNA-pipe
+star_index: /home/wangjl/data/ref/hg19/index/star/
+GTF: /home/wangjl/data/ref/hg19/gencode.v30lift37.annotation.gtf
+
+#RawPath: /home/wangjl/data/scPolyA-seq/data/raw_sc/human
+RawPath: /home/wangjl/data/apa/test0/raw
+Samples:
+ - c01ROW07
+ - c01ROW12

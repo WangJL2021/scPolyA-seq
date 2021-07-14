@@ -1,0 +1,7 @@
+rule htseq_count:
+	input: "map/{sample}_Aligned.sortedByCoord.out.bam"
+	output: "htseq/{sample}.bam.count"
+	log: "htseq/{sample}.bam.count.log"
+	shell: "htseq-count {input} {GTF} > {output} 2>{log} -f bam -i gene_name"
+	# -t gene //todo? default exon
+

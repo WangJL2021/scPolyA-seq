@@ -1,0 +1,47 @@
+rule load_genome:
+	output:"map/tmp/load.tmp"
+	params: index=config["star_index"], out="map/tmp/_load_"
+	log: "map/tmp/load.tmp.log"
+	shell: "touch {output} && \
+		STAR --genomeLoad LoadAndExit \
+		--genomeDir {params.index}  \
+		--outFileNamePrefix  {params.out} >{log} 2>&1"
+
+rule mapping:
+	input: "map/tmp/load.tmp", "clean/{sample}_trimmed.fq.gz"
+	output: "map/{sample}_Aligned.sortedByCoord.out.bam"
+	threads: 10
+	params: index=config["star_index"], out="map/{sample}_"
+	log: "map/{sample}.star.log"
+	shell: "STAR --runThreadN {threads}  \
+		--outSAMtype BAM SortedByCoordinate  \
+		--genomeDir {params.index}  \
+		--readFilesIn {input[1]}  \
+		--readFilesCommand zcat  \
+		--genomeLoad LoadAndKeep  \
+		--limitBAMsortRAM 20000000000  \
+		--outFileNamePrefix  {params.out} >{log} 2>&1"
+		# --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0 --outFilterMatchNmin 0 \
+		# //todo
+
+rule remove_genome:
+	input: expand("map/{sample}_Aligned.sortedByCoord.out.bam", sample=SI)
+	output: "map/tmp/remove_genome.tmp"
+	params: index=config["star_index"], out="map/tmp/_remove_"
+	log: "map/tmp/remove_genome.tmp.log"
+	shell: "touch {output} && \
+		STAR --genomeLoad Remove \
+		--genomeDir {params.index}  \
+		--outFileNamePrefix  {params.out} >{log} 2>&1"
+
+rule map_Uniq_ratio:
+	input: expand("map/{sample}_Aligned.sortedByCoord.out.bam", sample=SI)
+	output: "map/QC/uniq_map_ratio.df.txt"
+	params: log_path="map/", cids=SI
+	script: "../scripts/get_map_Uniq_ratio_df.py"
+
+rule draw_Uniq_ratio:
+	input: "map/QC/uniq_map_ratio.df.txt"
+	output: "map/QC/uniq_map_ratio.df.pdf"
+	script: "../scripts/draw_map_Uniq_ratio.R"
+

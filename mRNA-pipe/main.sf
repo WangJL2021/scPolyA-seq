@@ -1,0 +1,22 @@
+configfile:"config.yaml"
+SI=config['Samples'];
+GTF=config['GTF']
+
+rule all:
+	input: 
+		expand("QC_raw/{sample}_fastqc.html", sample=SI),
+		"QC_raw/multiqc/multiqc_report.html",
+		expand("clean/{sample}_trimmed.fq.gz", sample=SI),
+		"clean/multiqc/multiqc_report.html",
+		"map/tmp/remove_genome.tmp",
+		#"map/QC/uniq_map_ratio.df.txt",
+		"map/QC/uniq_map_ratio.df.pdf",
+		expand("htseq/{sample}.bam.count", sample=SI),
+		"htseq/mRNA_matrix.df.txt",
+
+include: "rules/01_QC_raw.sf"
+include: "rules/02_trim.sf"
+include: "rules/03_map_with_STAR.sf"
+include: "rules/04_htseq-count.sf"
+include: "rules/05_get_mRNA_matrix.sf"
+

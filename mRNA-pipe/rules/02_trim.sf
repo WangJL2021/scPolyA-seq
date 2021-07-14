@@ -1,0 +1,17 @@
+rule trim_galore:
+	input: "raw/{sample}.fastq.gz"
+	output:"clean/{sample}_trimmed.fq.gz", "clean/{sample}_trimmed_fastqc.html"
+	params: out_dir="clean/"
+	threads: 2
+	log: "clean/{sample}_trimmed.fq.gz.log"
+	shell: "trim_galore --quality 20 --phred33 --stringency 3 --length 20 --gzip --fastqc_args '-t {threads}' --output_dir {params.out_dir} {input} >{log} 2>&1"
+
+rule multi_QC_clean:
+	input: expand("clean/{sample}_trimmed_fastqc.html", sample=SI)
+	output:"clean/multiqc/multiqc_report.html"
+	params: 
+		in_dir="clean",
+		out_dir="clean/multiqc/"
+	log: "clean/multiqc/multiqc_report.html.log"
+	shell:"multiqc {params.in_dir}/*fastqc.zip -o {params.out_dir} >{log} 2>&1"
+
