@@ -270,6 +270,14 @@ chisqResult=(function(){
 })()
 debug(chisqResult)
 
+# save 
+write.table(gDPAU.sync_normal, "sync_normal/df1_gDPAU_delta.df.txt")
+write.table(rs[[1]], "sync_normal/df2_gDPAU_chisqP.df.txt")
+
+
+
+
+
 
 # combine p value, and delta or fc
 volcanoPlot=function(df1, df2, keyword, cid.A,cid.B, output=''){
@@ -295,11 +303,11 @@ volcanoPlot=function(df1, df2, keyword, cid.A,cid.B, output=''){
   g=ggplot(df, aes(delta, -log10(padj), color=factor(sig, levels=c('down', 'ns', 'up')) ) )+
     geom_point(size=0.1, alpha=0.5)+theme_bw()+
     labs( title=paste("gDPAU:", keyword, length(cid.A),length(cid.B)), x='Change of gDPAU', y="-log10(adj.p)" ) + theme_bw()+
-    theme(legend.box = "horizontal", # 图例，水平，标到底部
-          legend.key.size=unit(6,"pt"), #图例方块的高度
+    theme(legend.box = "horizontal",
+          legend.key.size=unit(6,"pt"),
           legend.position="bottom") +
     scale_color_manual('', labels=c( paste0("shorten(",tb[1],")"),paste0('n.s.(',tb[2],')'),paste0("lengthen(",tb[3],")") ), #图例文字
-                       values=c("blue", "#dddddd",'red') ) #自定义颜色
+                       values=c("blue", "#dddddd",'red') ) 
   
   dd_text=rbind(
     (function(){
