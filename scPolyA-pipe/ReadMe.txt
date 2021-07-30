@@ -1,6 +1,6 @@
 # How to use scPolyA-pipe to do de-novo polyA site discovery and get APA matrix from scPolyA-seq
 
-> scPolyA-seq produced a chain-specific, 3'end RNA-seq library.
+> scPolyA-seq produced a strand-specific, 3'end RNA-seq library.
 
 
 ## 1. Firt download this set of snakemake rules to anywhere on your Linux system, 

@@ -1,6 +1,6 @@
 # Code for scPolyA-seq
 
-> scPolyA-seq produced a chain-specific, 3’end RNA-seq library.
+> scPolyA-seq produced a strand-specific, 3’end RNA-seq library.
 
 
 
