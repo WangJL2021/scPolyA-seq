@@ -3,7 +3,7 @@
 > scPolyA-seq produced a strand-specific, 3'end RNA-seq library.
 
 
-## 1. Firt download this set of snakemake rules to anywhere on your Linux system, 
+## 1. First download this set of snakemake rules to anywhere on your Linux system, 
 and install some required softwares.
 
 ```

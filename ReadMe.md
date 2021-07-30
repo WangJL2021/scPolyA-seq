@@ -13,7 +13,9 @@ The pipeline to get polyA site and single-cell polyA site matrix from raw fastq 
 **How to use scPolyA-pipe to do *de-novo* polyA site discovery and get APA matrix from scPolyA-seq?**
 
 
-### 1. Firt download this set of snakemake rules to anywhere on your Linux system, 
+### 1. Download this pipeline and install required softwares.
+
+Download this set of snakemake rules under scPolyA-pipe/ to anywhere on your Linux system, 
 and install some required softwares.
 
 ```
@@ -37,23 +39,29 @@ Version: v2.25.0
 
 
 
-### 2. Goto your working directory, put your fastq file
+
+
+### 2. Prepare raw fastq files.
+
+Goto your working directory, put your fastq file
 
 ```
-for C1, put your cellId_R2.fastq.gz in raw/
+for C1 data in our assay, put your cellId_R2.fastq.gz in raw/, like
 raw/c01ROW07.fastq.gz
 raw/c01ROW12.fastq.gz
 
-or fastq file in fq/
+or fastq file in fq/, like
 fq/c01ROW07.fq
 fq/c01ROW12.fq
 ```
 
 
 
-### 3. Make a new file named config.yaml under working directory, 
-put important initial settings in this config file.
 
+### 3. Set configuration file
+
+Make a new text file named config.yaml under working directory, 
+put important initial settings in it.
 
 
 ```
@@ -69,19 +77,32 @@ Samples:
 ```
 
 
-### 4. (We recommend open an Tmux panal, in case the pipeline ceased on network error) 
-Run the pipeline in the working directory:
+
+### 4. Run pipeline
+
+We recommend open an Tmux panal, in case the pipeline ceased on network error.
+
+Run this pipeline under working directory:
 
 ```
 $ snakemake -s /home/wangjl/data/scPolyA-seq/scPolyA-pipe/main.sf -j 40 -p
 
 Params: 
--s the absolute path of this snakemake script.
--j CPU core number
--p print the cmd used in every rule.
+-s the absolute path of this snakemake main script.
+-j CPU core number to use.
+-p print the command used in every rule.
 ```
 
 Wait until the workflow ends.
 
+
+
+
+
+
+
+## Visulazation
+
+The files under step1/ to step5/ are codes used for analyzing and visulization in this project.
 
 

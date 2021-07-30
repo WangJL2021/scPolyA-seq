@@ -8,3 +8,4 @@ v0.6 add mRNA-pipe
 v0.7 update
 v0.8 update ReadMe
 v0.8-1 fix spell
+v0.8-2 update ReadMe
