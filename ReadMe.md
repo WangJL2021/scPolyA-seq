@@ -101,7 +101,7 @@ Wait until the workflow ends.
 
 
 
-## Visulazation
+## Visualization
 
 The files under step1/ to step5/ are codes used for analyzing and visulization in this project.
 
